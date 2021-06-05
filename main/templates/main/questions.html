@@ -1,0 +1,13 @@
+{% block title %}
+ UQAM - Ceci est une question
+{% endblock %}
+
+<body>
+    {% for reponse in reponses %}
+        <button type="button">
+            {% reponse %}
+        </button>
+    {% endfor %}
+</body>
+
+

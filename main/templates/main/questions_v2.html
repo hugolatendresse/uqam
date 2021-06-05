@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>thsi is the title</title>
+</head>
+
+<body>
+        <button type="button">
+          {{ question.qtext }}
+        </button>
+
+        {% for answer in responses %}
+            <button type="button">{{answer.atext}}</button>
+        {% endfor %}
+</body>
+
+</html>

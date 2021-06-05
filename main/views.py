@@ -1,29 +1,33 @@
 from django.shortcuts import render, redirect
-from main.models import Item
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-# Create your views here.
+from main.models import Question, Answer
+
+
 
 def homepage(request):
-    # return HttpResponse('<h1>Hello World</h1>')
-    # return render(request, template_name='main/home.html')
     return render(request, template_name='main/home.html')
 
 
-def itemspage(request):
+def Q1(request):
     messages.success(request, "This is a django message")
+    q1_instance = Question(qtext="De quel pays venez-vous?")
+    a1 = Answer(atext="France")
+    a2 = Answer(atext="Autre")
+    # q1_instance.save()
+    reponses = [a1, a2]
     if request.method == "GET":
-        items = Item.objects.all()
-        return render(request, template_name='main/items.html', context={'items': items})
-    elif request.method == "POST":
-        purchased_item = request.POST.get('purchased-item')
-        if purchased_item:
-            purchased_item_object = Item.objects.get(name=purchased_item)
-            purchased_item_object.owner = request.user
-            purchased_item_object.save()
-            print('congrats the new user ({}) is saved for {}'.format(request.user.username, purchased_item))
-        return redirect('items')
+        return render(request, template_name='main/questions_v2.html', context={'question': q1_instance, 'responses': reponses})
+    # elif request.method == "POST":
+    #     purchased_item = request.POST.get('purchased-item')
+    #     if purchased_item:
+    #         purchased_item_object = Item.objects.get(name=purchased_item)
+    #         purchased_item_object.owner = request.user
+    #         purchased_item_object.save()
+    #         print('congrats the new user ({}) is saved for {}'.format(request.user.username, purchased_item))
+    #     return redirect('Q1')
+
 
 def loginpage(request):
     if request.method == "GET":
@@ -34,7 +38,7 @@ def loginpage(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('items')
+            return redirect('Q1')
         else:
             return redirect('login')
 
