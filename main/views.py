@@ -36,6 +36,7 @@ def define_all():
                     )
         c.save()
 
+
 def homepage(request):
     define_all()
     return render(request, template_name='main/home.html')
@@ -61,7 +62,13 @@ def a_question(request, qnumber):
         answer_number = request.POST.get('answer_number')
         if answer_number:
             random_user = RandomUser.objects.get()
+            # update answer
             setattr(random_user, 'q' + str(qnumber), str(answer_number))
+            # update questions to skip
+            q_to_skip = Answer.objects.get(anumber=answer_number).q_to_skip
+            if q_to_skip[0] == "[":
+                for qnumber_to_skip in eval(q_to_skip):
+                    setattr(random_user, 'q' + str(qnumber_to_skip), "skip")
             random_user.save()
             print('selected answer {} for question {}'.format(getattr(random_user, 'q' + str(qnumber)), qnumber))
         return redirect('request_question')
@@ -69,8 +76,18 @@ def a_question(request, qnumber):
 
 def denoument(request):
     random_user = RandomUser.objects.get()
-    # conseils = list(Conseil.objects.filter(q1=random_user.q1, q2=random_user.q2))
-    conseils = list(Conseil.objects.filter(q1=str(random_user.q1)))
+
+    QUESTION_COUNT = 2
+
+    full_filter = {}
+    for i in range(QUESTION_COUNT):
+        question_number = 'q' + str(i+1)
+        temp_filter = str(getattr(random_user, question_number))
+        if "." in temp_filter:
+            full_filter[question_number+"__in"] = ["<any>", temp_filter]
+        elif temp_filter == "skip":
+            full_filter[question_number + "__in"] = ["<any>"]
+    conseils = list(Conseil.objects.filter(**full_filter))
     context = {'conseils': conseils}
     return render(request, template_name='main/denoument.html', context=context)
 
