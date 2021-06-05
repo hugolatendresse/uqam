@@ -1,5 +1,5 @@
 """
-WSGI config for quest_old project.
+WSGI config for quest project.
 
 It exposes the WSGI callable as a module-level variable named ``application``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quest_old.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'quest.settings')
 
 application = get_wsgi_application()
