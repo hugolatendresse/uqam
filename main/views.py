@@ -11,7 +11,7 @@ def homepage(request):
 
 
 def Q1(request):
-    messages.success(request, "This is a django message")
+    # messages.success(request, "This is a django message")
     q1_instance = Question(qtext="De quel pays venez-vous?")
     a1 = Answer(atext="France")
     a2 = Answer(atext="Autre")

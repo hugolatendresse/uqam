@@ -10,9 +10,32 @@
           {{ question.qtext }}
         </button>
 
-        {% for answer in responses %}
-            <button type="button">{{answer.atext}}</button>
-        {% endfor %}
 </body>
 
 </html>
+
+
+
+{% extends 'base.html' %}
+{% block title %}
+Questionnaire UQAM
+{% endblock %}
+
+{% block pageheader %}
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+      <div class="col-md-5 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal">Question 1</h1>
+        <h1 class="display-4 font-weight-normal">{{ question.qtext }}</h1>
+        {% for answer in responses %}
+            <a class="btn btn-outline-secondary" href="{% url 'Q1' %}">{{answer.atext}}</a>
+        {% endfor %}
+
+      </div>
+      <div class="product-device box-shadow d-none d-md-block"></div>
+      <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1> on peut ecrire autre choses ici</h1>
+{% endblock %}
