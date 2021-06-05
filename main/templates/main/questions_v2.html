@@ -1,21 +1,3 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>thsi is the title</title>
-</head>
-
-<body>
-        <button type="button">
-          {{ question.qtext }}
-        </button>
-
-</body>
-
-</html>
-
-
-
 {% extends 'base.html' %}
 {% block title %}
 Questionnaire UQAM
@@ -27,12 +9,16 @@ Questionnaire UQAM
         <h1 class="display-4 font-weight-normal">Question 1</h1>
         <h1 class="display-4 font-weight-normal">{{ question.qtext }}</h1>
         {% for answer in responses %}
-            <a class="btn btn-outline-secondary" href="{% url 'Q1' %}">{{answer.atext}}</a>
+          <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="answer_number" value="{{ answer.anumber }}">
+            <button type="submit" class="btn btn-outline-success btn-block">{{answer.atext}}</button>
+        </form>
         {% endfor %}
-
       </div>
-      <div class="product-device box-shadow d-none d-md-block"></div>
-      <div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+</div>
+<div class="product-device box-shadow d-none d-md-block"></div>
+<div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
 </div>
 {% endblock %}
 

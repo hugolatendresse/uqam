@@ -2,31 +2,58 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from main.models import Question, Answer
+from main.models import Question, Answer, RandomUser
 
+
+def define_all():
+    Question.objects.all().delete()
+    Answer.objects.all().delete()
+    RandomUser.objects.all().delete()
+    random_user = RandomUser()
+    random_user.save()
+    q1 = Question(qtext="De quel pays venez-vous?", qnumber=1)
+    q1.save()
+    q2 = Question(qtext="Etes-vous au Canada en ce moment", qnumber=2)
+    q2.save()
+    a1 = Answer(atext="France", qnumber=1, anumber=1)
+    a1.save()
+    a2 = Answer(atext="Autre", qnumber=1,anumber=2)
+    a2.save()
+    a3 = Answer(atext='Oui', qnumber=2, anumber=1)
+    a3.save()
+    a4 = Answer(atext='Non', qnumber=2, anumber=2)
+    a4.save()
 
 
 def homepage(request):
+    define_all()
     return render(request, template_name='main/home.html')
 
 
-def Q1(request):
+def request_question(request):
+    random_user = RandomUser.objects.get()
+    if random_user.q1 == "Ask":
+        return a_question(request, 1)
+    elif random_user.q2 == "Ask":
+        return a_question(request, 2)
+    else:
+        return homepage(request)
+
+
+def a_question(request, qnumber):
     # messages.success(request, "This is a django message")
-    q1_instance = Question(qtext="De quel pays venez-vous?")
-    a1 = Answer(atext="France")
-    a2 = Answer(atext="Autre")
-    # q1_instance.save()
-    reponses = [a1, a2]
+    question = Question.objects.get(qnumber=qnumber)
+    reponses = list(Answer.objects.filter(qnumber=qnumber))
     if request.method == "GET":
-        return render(request, template_name='main/questions_v2.html', context={'question': q1_instance, 'responses': reponses})
-    # elif request.method == "POST":
-    #     purchased_item = request.POST.get('purchased-item')
-    #     if purchased_item:
-    #         purchased_item_object = Item.objects.get(name=purchased_item)
-    #         purchased_item_object.owner = request.user
-    #         purchased_item_object.save()
-    #         print('congrats the new user ({}) is saved for {}'.format(request.user.username, purchased_item))
-    #     return redirect('Q1')
+        return render(request, template_name='main/questions_v2.html', context={'question': question, 'responses': reponses})
+    elif request.method == "POST":
+        answer_number = request.POST.get('answer_number')
+        if answer_number:
+            random_user = RandomUser.objects.get()
+            setattr(random_user, 'q' + str(qnumber), str(answer_number))
+            random_user.save()
+            print('selected answer {} for question {}'.format(getattr(random_user, 'q' + str(qnumber)), qnumber))
+        return redirect('request_question')
 
 
 def loginpage(request):
@@ -38,7 +65,7 @@ def loginpage(request):
         user = authenticate(username=username, password=password)
         if user is not None:
             login(request, user)
-            return redirect('Q1')
+            return redirect('a_question')
         else:
             return redirect('login')
 
