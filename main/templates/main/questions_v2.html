@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}
+Questionnaire UQAM
+{% endblock %}
+
+{% block pageheader %}
+<div class="position-relative overflow-hidden p-3 p-md-5 m-md-3 text-center bg-light">
+      <div class="col-md-5 p-lg-5 mx-auto my-5">
+        <h1 class="display-4 font-weight-normal">Question 1</h1>
+        <h1 class="display-4 font-weight-normal">{{ question.qtext }}</h1>
+        {% for answer in responses %}
+          <form method="POST">
+            {% csrf_token %}
+            <input type="hidden" name="answer_number" value="{{ answer.anumber }}">
+            <button type="submit" class="btn btn-outline-success btn-block">{{answer.atext}}</button>
+        </form>
+        {% endfor %}
+      </div>
+</div>
+<div class="product-device box-shadow d-none d-md-block"></div>
+<div class="product-device product-device-2 box-shadow d-none d-md-block"></div>
+</div>
+{% endblock %}
+
+{% block content %}
+<h1> on peut ecrire autre choses ici</h1>
+{% endblock %}
