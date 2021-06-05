@@ -1,3 +1,4 @@
+import pandas as pd
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
@@ -8,22 +9,32 @@ from main.models import Question, Answer, RandomUser, Conseil
 def define_all():
     Question.objects.all().delete()
     Answer.objects.all().delete()
+    Conseil.objects.all().delete()
     RandomUser.objects.all().delete()
     random_user = RandomUser()
     random_user.save()
-    q1 = Question(qtext="De quel pays venez-vous?", qnumber=1)
-    q1.save()
-    q2 = Question(qtext="Etes-vous au Canada en ce moment", qnumber=2)
-    q2.save()
-    a1 = Answer(atext="France", qnumber=1, anumber=1)
-    a1.save()
-    a2 = Answer(atext="Autre", qnumber=1,anumber=2)
-    a2.save()
-    a3 = Answer(atext='Oui', qnumber=2, anumber=1)
-    a3.save()
-    a4 = Answer(atext='Non', qnumber=2, anumber=2)
-    a4.save()
 
+    question_csv = pd.read_csv('questions.csv', header=0)
+    for i in range(question_csv.shape[0]):
+        q = Question(qtext=question_csv.loc[i, 'qtext'],
+                     qnumber=question_csv.loc[i, 'qnumber'])
+        q.save()
+
+    answers_csv = pd.read_csv('answers.csv', header=0)
+    for i in range(answers_csv.shape[0]):
+        a = Answer(atext=answers_csv.loc[i, 'atext'],
+                   qnumber=answers_csv.loc[i, 'qnumber'],
+                   anumber=answers_csv.loc[i, 'anumber'],
+                   q_to_skip=answers_csv.loc[i, 'q_to_skip'])
+        a.save()
+
+    conseil_csv = pd.read_csv('conseils.csv', header=0)
+    for i in range(conseil_csv.shape[0]):
+        c = Conseil(ctext=conseil_csv.loc[i, 'ctext'],
+                    q1=conseil_csv.loc[i, 'Q1'],
+                    q2=conseil_csv.loc[i, 'Q2'],
+                    )
+        c.save()
 
 def homepage(request):
     define_all()
@@ -58,8 +69,9 @@ def a_question(request, qnumber):
 
 def denoument(request):
     random_user = RandomUser.objects.get()
-    conseil = Conseil(text=str([random_user.q1, random_user.q2]))
-    context = {'conseil': conseil}
+    # conseils = list(Conseil.objects.filter(q1=random_user.q1, q2=random_user.q2))
+    conseils = list(Conseil.objects.filter(q1=str(random_user.q1)))
+    context = {'conseils': conseils}
     return render(request, template_name='main/denoument.html', context=context)
 
 
@@ -96,5 +108,3 @@ def registerpage(request):
 def logoutpage(request):
     logout(request)
     return redirect('home')
-
-
