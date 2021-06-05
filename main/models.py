@@ -14,7 +14,7 @@ class Question(models.Model):
 class Answer(models.Model):
     atext = models.CharField(max_length=1024)
     qnumber = models.IntegerField()
-    anumber = models.IntegerField()
+    anumber = models.CharField(max_length=1024)
     q_to_skip = models.CharField(max_length=1024, editable=False, default="")
     def __str__(self):
         return self.atext

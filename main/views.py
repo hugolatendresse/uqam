@@ -9,6 +9,7 @@ from main.models import Question, Answer, RandomUser, Conseil
 def define_all():
     Question.objects.all().delete()
     Answer.objects.all().delete()
+    Conseil.objects.all().delete()
     RandomUser.objects.all().delete()
     random_user = RandomUser()
     random_user.save()
@@ -69,7 +70,7 @@ def a_question(request, qnumber):
 def denoument(request):
     random_user = RandomUser.objects.get()
     # conseils = list(Conseil.objects.filter(q1=random_user.q1, q2=random_user.q2))
-    conseils = list(Conseil.objects.filter())
+    conseils = list(Conseil.objects.filter(q1=str(random_user.q1)))
     context = {'conseils': conseils}
     return render(request, template_name='main/denoument.html', context=context)
 
