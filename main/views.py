@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib import messages
-from main.models import Question, Answer, RandomUser
+from main.models import Question, Answer, RandomUser, Conseil
 
 
 def define_all():
@@ -37,7 +37,7 @@ def request_question(request):
     elif random_user.q2 == "Ask":
         return a_question(request, 2)
     else:
-        return homepage(request)
+        return denoument(request)
 
 
 def a_question(request, qnumber):
@@ -54,6 +54,13 @@ def a_question(request, qnumber):
             random_user.save()
             print('selected answer {} for question {}'.format(getattr(random_user, 'q' + str(qnumber)), qnumber))
         return redirect('request_question')
+
+
+def denoument(request):
+    random_user = RandomUser.objects.get()
+    conseil = Conseil(text=str([random_user.q1, random_user.q2]))
+    context = {'conseil': conseil}
+    return render(request, template_name='main/denoument.html', context=context)
 
 
 def loginpage(request):
@@ -89,3 +96,5 @@ def registerpage(request):
 def logoutpage(request):
     logout(request)
     return redirect('home')
+
+

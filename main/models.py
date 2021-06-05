@@ -19,6 +19,7 @@ class Answer(models.Model):
     def __str__(self):
         return self.atext
 
+
 class RandomUser(models.Model):
     q1 = models.CharField(max_length=1024, editable=False, default="Ask")
     q2 = models.CharField(max_length=1024, editable=False, default="Ask")
@@ -26,3 +27,7 @@ class RandomUser(models.Model):
     q4 = models.CharField(max_length=1024, editable=False, default="Ask")
     q5 = models.CharField(max_length=1024, editable=False, default="Ask")
     q6 = models.CharField(max_length=1024, editable=False, default="Ask")
+
+
+class Conseil(models.Model):
+    text = models.CharField(max_length=20000)
