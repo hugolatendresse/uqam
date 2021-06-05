@@ -1,0 +1,1 @@
+# uqam-django
