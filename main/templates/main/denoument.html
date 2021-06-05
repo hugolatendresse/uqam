@@ -2,9 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Conseil</title>
 </head>
 <body>
-{{conseil.text}}
+{% for conseil in conseils %}
+    {{conseil.ctext}}
+{% endfor %}
 </body>
 </html>
