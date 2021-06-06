@@ -14,13 +14,13 @@ def define_all():
     random_user = RandomUser()
     random_user.save()
 
-    question_csv = pd.read_csv('questions.csv', header=0)
+    question_csv = pd.read_excel('questions.xlsx', header=0)
     for i in range(question_csv.shape[0]):
         q = Question(qtext=question_csv.loc[i, 'qtext'],
                      qnumber=question_csv.loc[i, 'qnumber'])
         q.save()
 
-    answers_csv = pd.read_csv('answers.csv', header=0)
+    answers_csv = pd.read_excel('answers.xlsx', header=0)
     for i in range(answers_csv.shape[0]):
         a = Answer(atext=answers_csv.loc[i, 'atext'],
                    qnumber=answers_csv.loc[i, 'qnumber'],
@@ -28,7 +28,7 @@ def define_all():
                    q_to_skip=answers_csv.loc[i, 'q_to_skip'])
         a.save()
 
-    conseil_csv = pd.read_csv('conseils.csv', header=0)
+    conseil_csv = pd.read_excel('conseils.xlsx', header=0)
     for i in range(conseil_csv.shape[0]):
         c = Conseil(ctext=conseil_csv.loc[i, 'ctext'],
                     q1=conseil_csv.loc[i, 'Q1'],
