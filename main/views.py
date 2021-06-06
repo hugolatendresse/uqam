@@ -49,7 +49,7 @@ def request_question(request):
     elif random_user.q2 == "Ask":
         return a_question(request, 2)
     else:
-        return denoument(request)
+        return redirect('denoument')
 
 
 def a_question(request, qnumber):
@@ -117,11 +117,11 @@ def registerpage(request):
             password = form.cleaned_data.get('password1')
             user = authenticate(username=username, password=password)
             login(request, user)
-            return redirect('home')
+            return redirect('accueil')
         else:
             return redirect('register')
 
 
 def logoutpage(request):
     logout(request)
-    return redirect('home')
+    return redirect('accueil')
