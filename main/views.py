@@ -2,11 +2,10 @@ import pandas as pd
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm
-from django.contrib import messages
 from main.models import Question, Answer, RandomUser, Conseil
 
 
-def define_all():
+def update_db(request):
     Question.objects.all().delete()
     Answer.objects.all().delete()
     Conseil.objects.all().delete()
@@ -38,10 +37,20 @@ def define_all():
             conseil_arguments['q' + str(kth_question + 1)] = conseil_csv.loc[ith_conseil, 'Q' + str(kth_question + 1)]
         c = Conseil(**conseil_arguments)
         c.save()
+    return redirect('accueil')
+
+def reset_random_user():
+    random_user = RandomUser.objects.get()
+    question_cnt = random_user.question_cnt
+    breakpoint()
+    RandomUser.objects.all().delete()
+    random_user = RandomUser()
+    random_user.question_cnt = question_cnt
+    random_user.save()
 
 
 def homepage(request):
-    define_all()
+    reset_random_user()
     return render(request, template_name='main/home.html')
 
 
@@ -132,3 +141,6 @@ def registerpage(request):
 def logoutpage(request):
     logout(request)
     return redirect('accueil')
+
+
+

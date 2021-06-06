@@ -34,7 +34,7 @@ class Conseil(models.Model):
 
 
 class RandomUser(models.Model):
-    question_cnt = models.IntegerField()
+    question_cnt = models.IntegerField(editable=False, default=0)
     q1 = models.CharField(max_length=1024, editable=False, default="Ask")
     q2 = models.CharField(max_length=1024, editable=False, default="Ask")
     q3 = models.CharField(max_length=1024, editable=False, default="Ask")
