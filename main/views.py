@@ -12,28 +12,31 @@ def define_all():
     Conseil.objects.all().delete()
     RandomUser.objects.all().delete()
     random_user = RandomUser()
-    random_user.save()
 
-    question_csv = pd.read_csv('questions.csv', header=0)
-    for i in range(question_csv.shape[0]):
-        q = Question(qtext=question_csv.loc[i, 'qtext'],
-                     qnumber=question_csv.loc[i, 'qnumber'])
+    question_csv = pd.read_excel('questions.xlsx', header=0, engine='openpyxl')
+    question_cnt = question_csv.shape[0]
+    for kth_question in range(question_cnt):
+        q = Question(qtext=question_csv.loc[kth_question, 'qtext'],
+                     qnumber=question_csv.loc[kth_question, 'qnumber'])
         q.save()
 
-    answers_csv = pd.read_csv('answers.csv', header=0)
-    for i in range(answers_csv.shape[0]):
-        a = Answer(atext=answers_csv.loc[i, 'atext'],
-                   qnumber=answers_csv.loc[i, 'qnumber'],
-                   anumber=answers_csv.loc[i, 'anumber'],
-                   q_to_skip=answers_csv.loc[i, 'q_to_skip'])
+    random_user.question_cnt = question_cnt
+    random_user.save()
+
+    answers_csv = pd.read_excel('answers.xlsx', header=0, engine='openpyxl')
+    for kth_question in range(answers_csv.shape[0]):
+        a = Answer(atext=answers_csv.loc[kth_question, 'atext'],
+                   qnumber=answers_csv.loc[kth_question, 'qnumber'],
+                   anumber=answers_csv.loc[kth_question, 'anumber'],
+                   q_to_skip=answers_csv.loc[kth_question, 'q_to_skip'])
         a.save()
 
-    conseil_csv = pd.read_csv('conseils.csv', header=0)
-    for i in range(conseil_csv.shape[0]):
-        c = Conseil(ctext=conseil_csv.loc[i, 'ctext'],
-                    q1=conseil_csv.loc[i, 'Q1'],
-                    q2=conseil_csv.loc[i, 'Q2'],
-                    )
+    conseil_csv = pd.read_excel('conseils.xlsx', header=0, engine='openpyxl')
+    for ith_conseil in range(conseil_csv.shape[0]):
+        conseil_arguments = {'ctext': conseil_csv.loc[ith_conseil, 'ctext']}
+        for kth_question in range(question_cnt):
+            conseil_arguments['q' + str(kth_question + 1)] = conseil_csv.loc[ith_conseil, 'Q' + str(kth_question + 1)]
+        c = Conseil(**conseil_arguments)
         c.save()
 
 
@@ -44,12 +47,12 @@ def homepage(request):
 
 def request_question(request):
     random_user = RandomUser.objects.get()
-    if random_user.q1 == "Ask":
-        return a_question(request, 1)
-    elif random_user.q2 == "Ask":
-        return a_question(request, 2)
-    else:
-        return redirect('denoument')
+
+    for i in range(random_user.question_cnt):
+        question_number = 'q' + str(i + 1)
+        if getattr(random_user, question_number) == "Ask":
+            return a_question(request, i + 1)
+    return redirect('denoument')
 
 
 def a_question(request, qnumber):
@@ -77,14 +80,12 @@ def a_question(request, qnumber):
 def denoument(request):
     random_user = RandomUser.objects.get()
 
-    QUESTION_COUNT = 2
-
     full_filter = {}
-    for i in range(QUESTION_COUNT):
-        question_number = 'q' + str(i+1)
+    for i in range(random_user.question_cnt):
+        question_number = 'q' + str(i + 1)
         temp_filter = str(getattr(random_user, question_number))
         if "." in temp_filter:
-            full_filter[question_number+"__in"] = ["<any>", temp_filter]
+            full_filter[question_number + "__in"] = ["<any>", temp_filter]
         elif temp_filter == "skip":
             full_filter[question_number + "__in"] = ["<any>"]
     conseils = list(Conseil.objects.filter(**full_filter))
