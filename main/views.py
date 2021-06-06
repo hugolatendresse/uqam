@@ -89,6 +89,12 @@ def denoument(request):
             full_filter[question_number + "__in"] = ["<any>"]
     conseils = list(Conseil.objects.filter(**full_filter))
     context = {'conseils': conseils}
+
+    Question.objects.all().delete()
+    Answer.objects.all().delete()
+    Conseil.objects.all().delete()
+    RandomUser.objects.all().delete()
+
     return render(request, template_name='main/denoument.html', context=context)
 
 
