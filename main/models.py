@@ -28,6 +28,10 @@ class Conseil(models.Model):
     q4 = models.CharField(max_length=1024, editable=False, default="<any>")
     q5 = models.CharField(max_length=1024, editable=False, default="<any>")
     q6 = models.CharField(max_length=1024, editable=False, default="<any>")
+    q7 = models.CharField(max_length=1024, editable=False, default="<any>")
+    q8 = models.CharField(max_length=1024, editable=False, default="<any>")
+    q9 = models.CharField(max_length=1024, editable=False, default="<any>")
+    q10 = models.CharField(max_length=1024, editable=False, default="<any>")
 
     def __str__(self):
         return self.ctext
@@ -41,4 +45,8 @@ class RandomUser(models.Model):
     q4 = models.CharField(max_length=1024, editable=False, default="skip")
     q5 = models.CharField(max_length=1024, editable=False, default="skip")
     q6 = models.CharField(max_length=1024, editable=False, default="skip")
+    q7 = models.CharField(max_length=1024, editable=False, default="skip")
+    q8 = models.CharField(max_length=1024, editable=False, default="skip")
+    q9 = models.CharField(max_length=1024, editable=False, default="skip")
+    q10 = models.CharField(max_length=1024, editable=False, default="skip")
 
