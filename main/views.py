@@ -23,12 +23,12 @@ def define_all():
     random_user.question_cnt = question_cnt
     random_user.save()
 
-    answers_csv = pd.read_excel('answers.xlsx', header=0, engine='openpyxl')
+    answers_csv = pd.read_excel('answers _REMOVE.xlsx', header=0, engine='openpyxl')
     for kth_question in range(answers_csv.shape[0]):
         a = Answer(atext=answers_csv.loc[kth_question, 'atext'],
                    qnumber=answers_csv.loc[kth_question, 'qnumber'],
                    anumber=answers_csv.loc[kth_question, 'anumber'],
-                   q_to_skip=answers_csv.loc[kth_question, 'q_to_skip'])
+                   q_to_ask=answers_csv.loc[kth_question, 'q_to_ask'])
         a.save()
 
     conseil_csv = pd.read_excel('conseils.xlsx', header=0, engine='openpyxl')
@@ -47,7 +47,6 @@ def homepage(request):
 
 def request_question(request):
     random_user = RandomUser.objects.get()
-
     for i in range(random_user.question_cnt):
         question_number = 'q' + str(i + 1)
         if getattr(random_user, question_number) == "Ask":
@@ -67,11 +66,11 @@ def a_question(request, qnumber):
             random_user = RandomUser.objects.get()
             # update answer
             setattr(random_user, 'q' + str(qnumber), str(answer_number))
-            # update questions to skip
-            q_to_skip = Answer.objects.get(anumber=answer_number).q_to_skip
-            if q_to_skip[0] == "[":
-                for qnumber_to_skip in eval(q_to_skip):
-                    setattr(random_user, 'q' + str(qnumber_to_skip), "skip")
+            # update questions to ask
+            q_to_ask = Answer.objects.get(anumber=answer_number).q_to_ask
+            if q_to_ask[0] == "[":
+                for qnumber_to_ask in eval(q_to_ask):
+                    setattr(random_user, 'q' + str(qnumber_to_ask), "Ask")
             random_user.save()
             print('selected answer {} for question {}'.format(getattr(random_user, 'q' + str(qnumber)), qnumber))
         return redirect('request_question')

@@ -14,7 +14,7 @@ class Answer(models.Model):
     atext = models.CharField(max_length=1024)
     qnumber = models.IntegerField()
     anumber = models.CharField(max_length=1024)
-    q_to_skip = models.CharField(max_length=1024, editable=False, default="")
+    q_to_ask = models.CharField(max_length=1024, editable=False, default="")
 
     def __str__(self):
         return self.atext
@@ -36,9 +36,9 @@ class Conseil(models.Model):
 class RandomUser(models.Model):
     question_cnt = models.IntegerField()
     q1 = models.CharField(max_length=1024, editable=False, default="Ask")
-    q2 = models.CharField(max_length=1024, editable=False, default="Ask")
-    q3 = models.CharField(max_length=1024, editable=False, default="Ask")
-    q4 = models.CharField(max_length=1024, editable=False, default="Ask")
-    q5 = models.CharField(max_length=1024, editable=False, default="Ask")
-    q6 = models.CharField(max_length=1024, editable=False, default="Ask")
+    q2 = models.CharField(max_length=1024, editable=False, default="skip")
+    q3 = models.CharField(max_length=1024, editable=False, default="skip")
+    q4 = models.CharField(max_length=1024, editable=False, default="skip")
+    q5 = models.CharField(max_length=1024, editable=False, default="skip")
+    q6 = models.CharField(max_length=1024, editable=False, default="skip")
 
