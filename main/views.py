@@ -23,7 +23,7 @@ def define_all():
     random_user.question_cnt = question_cnt
     random_user.save()
 
-    answers_csv = pd.read_excel('answers _REMOVE.xlsx', header=0, engine='openpyxl')
+    answers_csv = pd.read_excel('answers.xlsx', header=0, engine='openpyxl')
     for kth_question in range(answers_csv.shape[0]):
         a = Answer(atext=answers_csv.loc[kth_question, 'atext'],
                    qnumber=answers_csv.loc[kth_question, 'qnumber'],
