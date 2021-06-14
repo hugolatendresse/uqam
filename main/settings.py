@@ -25,7 +25,7 @@ SECRET_KEY = 'ayq!1li47=qwl&a8j6hi7k86zpufklob-mnie7!5@@5b)5v+u+'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['hugolatendresse.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
